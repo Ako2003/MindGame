@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik+Gemstones&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Jost", sans-serif;
+  @apply outline-none scroll-smooth;
+}
+
+::selection {
+  @apply bg-lightener-200;
+}
+
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-300 dark:bg-neutral-500 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-neutral-400;
+}
+
+body {
+  @apply bg-dark-400 text-neutral-400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+a {
+  @apply text-white;
+}
+
+img {
+  @apply select-none pointer-events-none;
+}
+
+.card {
+  @apply relative w-[7.5rem] h-36 bg-black rounded-xl border-8 border-black overflow-hidden select-none pointer-events-none;
+}
+
+.position-center {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+.navbar {
+  @apply fixed z-50 h-[60px] w-[90vw] lg:w-4/5 xl:w-3/5 top-8 left-1/2 -translate-x-1/2;
+}
+
+.navbar-container {
+  @apply h-full w-full bg-darkener-200 rounded-full px-8 shadow-card-200 backdrop-blur-xl flex items-center justify-between font-medium text-lg;
+}
+
+.top-light {
+  @apply bg-gradient-radial-at-top from-lightener-100 to-transparent;
+}
+
+.bottom-light {
+  @apply bg-gradient-radial-at-bottom from-lightener-100 to-transparent;
+}

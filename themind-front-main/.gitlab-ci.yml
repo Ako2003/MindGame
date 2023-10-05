@@ -1,0 +1,53 @@
+stages:
+  - install
+  - build
+  - deploy
+
+cache:
+  paths:
+    - node_modules/
+
+variables:
+  TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
+  TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
+
+### INSTALL ###
+install_dependencies:
+  image: node:18.12.1-alpine3.15
+  stage: install
+  only:
+    - merge_requests
+  script:
+    - npm i
+    - CI=false npm run build
+ 
+### BUILD ###
+build_image:
+  stage: build
+  only:
+    - merge_requests
+  image: docker:20.10.21
+  services:
+    - docker:20.10.21-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  script:
+    - docker build -t $TAG_COMMIT -t $TAG_LATEST . 
+    - echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin
+    - docker image ls
+    - docker push $TAG_COMMIT
+    - docker push $TAG_LATEST
+
+### DEPLOY ###
+deploy:
+  stage: deploy
+  only:
+    - merge_requests
+  before_script:
+    - chmod 400 $SSH_KEY # owner can only read (no access for others)
+  script: 
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@207.154.251.94 "
+        echo $CI_REGISTRY_PASSWORD | docker login -u $CI_REGISTRY_USER $CI_REGISTRY --password-stdin &&
+        docker pull $TAG_COMMIT &&
+        docker ps -a && docker container stop front && docker container rm front &&
+        docker run -p 80:80 -d --name front $TAG_COMMIT "

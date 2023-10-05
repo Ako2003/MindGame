@@ -1,0 +1,26 @@
+# create me yml file in .github/workflows/nest-react.yml and add below code
+name: Nest React CI
+
+on: [push] 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+    - name: Install dependencies
+      run: |
+        npm install
+        npm run build
+    - name: Run tests
+      run: npm run test
+    - name: Run lint
+      run: npm run lint
+    - name: Run e2e
+      run: npm run test:e2e
+    - name: Run build
+      run: npm run build
